@@ -32,14 +32,14 @@ module Griddler
       end
 
       def ccs
-        cc = param_or_header(:Cc)
-        cc.split(',').map(&:strip)
+        []
       end
 
       def extract_header(key)
         return nil unless params['message-headers'].present?
-
-        headers = params['message-headers'].select do |h|
+        message_headers = params['message-headers']
+        message_headers = JSON.parse(message_headers) if message_headers.class == String
+        headers = message_headers.select do |h|
           h.first.to_s == key.to_s
         end
         headers.flatten.last
